@@ -5,18 +5,27 @@ info:
 paths:
   /gestion:
     post:
-      summary: Processa um arquivo JSON com endereços IP
+      summary: Processa endereços IP
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-                  description: Arquivo JSON com endereços IP
+              type: array
+              items:
+                type: object
+                properties:
+                  Ip:
+                    type: string
+                  Nombre:
+                    type: string
+            example:
+              - Ip: "10.1.1.1"
+                Nombre: "Sede 1"
+              - Ip: "10.1.1.2"
+                Nombre: "Sede 3"
+              - Ip: "10.1.1.3"
+                Nombre: "Sede 3"
       responses:
         '200':
           description: Processamento concluído
@@ -27,5 +36,78 @@ paths:
                 properties:
                   message:
                     type: string
+        '400':
+          description: Erro na requisição
+  /graficar:
+    post:
+      summary: Gera gráficos de barras e de pizza com base nos dados fornecidos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  TCP:
+                    type: integer
+                  UDP:
+                    type: integer
+                  ICMP:
+                    type: integer
+                  HTTP:
+                    type: integer
+                  HTTPS:
+                    type: integer
+                  SMTP:
+                    type: integer
+                  IMAP:
+                    type: integer
+            example:
+              - "TCP": 1544
+                "UDP": 1983
+                "ICMP": 123
+                "HTTP": 5321
+                "HTTPS": 15402
+                "SMTP": 4755
+                "IMAP": 10123
+              - "TCP": 3421
+                "UDP": 8932
+                "ICMP": 456
+                "HTTP": 7895
+                "HTTPS": 12354
+                "SMTP": 5678
+                "IMAP": 9876
+              - "TCP": 6789
+                "UDP": 3456
+                "ICMP": 789
+                "HTTP": 9874
+                "HTTPS": 10101
+                "SMTP": 8901
+                "IMAP": 7654
+              - "TCP": 1234
+                "UDP": 7890
+                "ICMP": 101
+                "HTTP": 4567
+                "HTTPS": 8901
+                "SMTP": 2345
+                "IMAP": 5432
+      responses:
+        '200':
+          description: Gráficos gerados com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  bar_chart:
+                    type: string
+                    description: Caminho para o gráfico de barras
+                  pie_chart:
+                    type: string
+                    description: Caminho para o gráfico de pizza
         '400':
           description: Erro na requisição
